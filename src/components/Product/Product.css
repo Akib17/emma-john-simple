@@ -1,0 +1,32 @@
+.product {
+    display: flex;
+    border-bottom: 1px solid lightgray;
+    margin-bottom: 20px;
+    margin-right: 20px;
+    padding: 20px 0;
+}
+.product-desc {
+    margin-left: 30px;
+}
+.product-name {
+    color: blue;
+    font-weight: 400;
+    font-size: 20px;
+}
+.cart-btn {
+    background: goldenrod;
+    border: 1px solid gray;
+    width: 180px;
+    height: 30px;
+    line-height: 30px;
+    cursor: pointer;
+    font-size: 16px;
+    border-radius: 3px;
+    -webkit-border-radius: 3px;
+    -moz-border-radius: 3px;
+    -ms-border-radius: 3px;
+    -o-border-radius: 3px;
+}
+.cart-btn:focus {
+    outline: none;
+}
