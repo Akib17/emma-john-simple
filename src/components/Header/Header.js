@@ -1,18 +1,25 @@
-import React, { Component } from 'react'
+import React from 'react';
 import logo from '../../images/logo.png'
 import './Header.css'
+import { useAuth } from '../Login/useAuth';
 
-export default class Header extends Component {
-    render() {
-        return (
-            <div className='header'>
-                <img src={logo} alt="Logo" />
-                <nav>
-                    <a href="/shop">Shop</a>
-                    <a href="/review">Order Review</a>
-                    <a href="/manage">Manage Inventory</a>
-                </nav>
-            </div>
-        )
-    }
-}
+const Header = () => {
+    const auth = useAuth()
+    return (
+        <div className='header'>
+            <img src={logo} alt="Logo" />
+            <nav>
+                <a href="/shop">Shop</a>
+                <a href="/review">Order Review</a>
+                <a href="/manage">Manage Inventory</a>
+                {
+                    auth.user ?
+                        <a href="/login" style={{color: 'orange'}}> {auth.user.name} </a> :
+                        <a href="/login" style={{color: 'orange'}}>Sign In</a>
+                }
+            </nav>
+        </div>
+    );
+};
+
+export default Header;

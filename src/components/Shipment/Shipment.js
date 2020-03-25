@@ -1,0 +1,37 @@
+import React from 'react';
+import { useForm } from 'react-hook-form';
+import './Shipment.css'
+import { useAuth } from '../Login/useAuth';
+
+const Shipment = () => {
+    const { register, handleSubmit, errors } = useForm()
+  const onSubmit = data => { console.log(data) }
+  const auth = useAuth()
+  
+    return (
+      <form className="form" onSubmit={handleSubmit(onSubmit)}>
+        
+        <input name="name" defaultValue={auth.user.name} ref={register({ required: true })} placeholder="Name" />
+        {errors.name && <span className="error">Name is required</span>}
+
+        <input name="email" defaultValue={auth.user.email} ref={register({ required: true })} placeholder="Email" />
+        {errors.email && <span className="error">Email is required</span>}
+
+        <input name="address1" ref={register({ required: true })} placeholder="Address" />
+        {errors.address1 && <span className="error">Address 1 is required</span>}
+
+        <input name="city" ref={register({ required: true })} placeholder="City" />
+        {errors.city && <span className="error">City is required</span>}
+
+        <input name="zipcode" ref={register({ required: true })} placeholder="Zip code" />
+        {errors.zipcode && <span className="error">Zip code is required</span>}
+
+        <input name="phone" ref={register({ required: true })} placeholder="Phone number" />
+        {errors.phone && <span className="error">Phone Number is required</span>}
+        
+        <input type="submit" />
+      </form>
+    )
+};
+
+export default Shipment;

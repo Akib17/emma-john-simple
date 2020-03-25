@@ -1,7 +1,10 @@
 import React from 'react';
+import { useAuth } from '../Login/useAuth';
 
 const Cart = (props) => {
     const cart = props.cart
+    const user = useAuth()
+    // console.log(user.user)
     const totalPrice = cart.reduce((total, product) => total + product.price * product.quantity, 0)
 
     let shippingCost = 0
@@ -32,6 +35,7 @@ const Cart = (props) => {
             {
                 props.children
             }
+            <h4> {} </h4>
         </div>
     );
 };
