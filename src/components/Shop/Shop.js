@@ -1,5 +1,4 @@
 import React, { useEffect } from 'react';
-import fakeData from '../../fakeData';
 import { useState } from "react";
 import './Shop.css';
 import Product from '../Product/Product';
@@ -8,19 +7,30 @@ import { Link } from 'react-router-dom';
 import { addToDatabaseCart, getDatabaseCart } from '../../utilities/databaseManager';
 
 const Shop = () => {
-    const first10 = fakeData.slice(0, 10)
-    const [products, setProducts] = useState(first10)
+    const [products, setProducts] = useState([])
     const [cart, setCart] = useState([])
     useEffect(() => {
-        const saveProduct = getDatabaseCart()
-        const productKeys = Object.keys(saveProduct)
-        const newProducts = productKeys.map(k => {
-            const getProducts = fakeData.find(pdKey => pdKey.key === k)
-            getProducts.quantity = saveProduct[k]
-            return getProducts
-        })
-        setCart(newProducts)
+        fetch('http://localhost:4000/products')
+            .then(res => res.json())
+            .then(data => {
+                setProducts(data)
+                // console.log(products)
+            })
     }, [])
+    useEffect(() => {
+        const saveProduct = getDatabaseCart()
+        // console.log(saveProduct)
+        const productKeys = Object.keys(saveProduct)
+        if (products.length) {
+            const newProducts = productKeys.map(k => {
+                const getProducts = products.find(pdKey => pdKey.key === k)
+                getProducts.quantity = saveProduct[k]
+                return getProducts
+            })
+            setCart(newProducts)
+        }
+        // console.log(saveProduct)
+    }, [products])
     const addToProductHandler = (product) => {
         const someProducts = cart.find(pd => pd.key === product.key)
         let count = 1

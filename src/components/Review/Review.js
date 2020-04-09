@@ -1,16 +1,13 @@
 import React, { useEffect, useState } from 'react';
-import { getDatabaseCart, removeFromDatabaseCart, processOrder } from '../../utilities/databaseManager';
-import fakeData from '../../fakeData';
+import { getDatabaseCart, removeFromDatabaseCart } from '../../utilities/databaseManager';
 import ReviewItems from '../ReviewItems/ReviewItems';
 import Cart from '../Cart/Cart';
-import thankYouImage from '../../images/giphy.gif'
 import { Link } from 'react-router-dom';
 import { useAuth } from '../Login/useAuth';
 
 const Review = () => {
     const auth = useAuth()
     const [cart, setCart] = useState([]);
-    const [review, setReview] = useState(false);
 
     const removeItem = (productKey) => {
         const newCart = cart.filter(item => item.key !== productKey)
@@ -20,25 +17,28 @@ const Review = () => {
 
     useEffect(() => {
         const saveCart = getDatabaseCart()
+        // console.log(saveCart)
         const productKeys = Object.keys(saveCart)
-        const counts = productKeys.map(k => {
-            const products = fakeData.find(pd => pd.key === k)
-            products.quantity = saveCart[k]
-            return products
+        // console.log(productKeys)
+        fetch('http://localhost:4000/productByKey', {
+            method: 'POST',
+            headers: {
+                'Content-type': 'application/json'
+            },
+            body: JSON.stringify(productKeys)
         })
-        setCart(counts)
+            .then(res => res.json())
+            .then(data => {
+                const counts = productKeys.map(k => {
+                    const products = data.find(pd => pd.key === k)
+                    // console.log(products)
+                    products.quantity = saveCart[k]
+                    return products
+                })
+                setCart(counts)
+                // console.log(counts)
+            })
     }, [])
-
-    const reviewHandler = () => {
-        setCart([])
-        setReview(true)
-        processOrder()
-    }
-
-    let thankYou;
-    if (review) {
-        thankYou = <img src={thankYouImage} alt="Thank you Image" />
-    }
 
     return (
         <div className="shop-container">
@@ -46,18 +46,15 @@ const Review = () => {
                 {
                     cart.map(pd => <ReviewItems key={pd.key} product={pd} removeItem={removeItem}></ReviewItems>)
                 }
-                {
-                    thankYou
-                }
             </div>
             <div className="cart-container">
                 <Cart cart={cart}>
                     <Link to="shipment">
                         {
                             auth.user ?
-                                <button onClick={reviewHandler} className="cart-btn">Proceed to checkout</button>
+                                <button className="cart-btn">Proceed to checkout</button>
                                 :
-                                <button onClick={reviewHandler} className="cart-btn">Login to proceed</button>
+                                <button className="cart-btn">Login to proceed</button>
                         }
                     </Link>
                 </Cart>
